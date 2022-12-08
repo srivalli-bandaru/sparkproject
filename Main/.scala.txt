@@ -1,0 +1,88 @@
+val sqlContext = new org.apache.spark.sql.SQLContext(sc);
+ import sqlContext.implicits._
+ import org.apache.spark.sql.types._ 
+ import org.apache.spark.sql.Row;
+ import org.apache.spark.sql.types.{StructType,StructField,StringType}; 
+
+ val firstSchema = StructType(Array(
+    StructField("ip_address", StringType, true),
+    StructField("date", StringType, true),
+    StructField("http_get", StringType, true),
+    StructField("http_status", IntegerType, true),
+    StructField("rel_link", StringType, true)))
+    
+    
+val df =sqlContext.read.format("com.databricks.spark.csv").option("header", "true").option("delimiter", ",").schema(firstSchema).load("/user/maria_dev/project5/Weblogs.csv")
+
+val secondSchema = StructType(Array(
+    StructField("ip_address", StringType, true),
+    StructField("country", StringType, true),
+    StructField("browser", StringType, true),
+    StructField("city", StringType, true)))
+    
+val df2 =sqlContext.read.format("com.databricks.spark.csv").option("header", "true").option("delimiter", ",").schema(secondSchema).load("/user/maria_dev/project5/IP_Mapping.csv")
+
+val united_df = df.join(df2, "ip_address" )
+
+val sqlContext = new org.apache.spark.sql.SQLContext(sc);
+ import sqlContext.implicits._
+ import org.apache.spark.sql.types._ 
+ import org.apache.spark.sql.Row;
+ import org.apache.spark.sql.types.{StructType,StructField,StringType}; 
+
+ val firstSchema = StructType(Array(
+    StructField("ip_address", StringType, true),
+    StructField("date", StringType, true),
+    StructField("http_get", StringType, true),
+    StructField("http_status", IntegerType, true),
+    StructField("rel_link", StringType, true)))
+    
+    
+val df =sqlContext.read.format("com.databricks.spark.csv").option("header", "true").option("delimiter", ",").schema(firstSchema).load("/user/maria_dev/project5/Webloags.csv")
+
+val secondSchema = StructType(Array(
+    StructField("ip_address", StringType, true),
+    StructField("country", StringType, true),
+    StructField("browser", StringType, true),
+    StructField("city", StringType, true)))
+    
+val df2 =sqlContext.read.format("com.databricks.spark.csv").option("header", "true").option("delimiter", ",").schema(secondSchema).load("/user/maria_dev/project5/IP_Mapping.csv")
+
+val united_df = df.join(df2, "ip_address" )
+
+val sqlContext = new org.apache.spark.sql.SQLContext(sc);
+ import sqlContext.implicits._
+ import org.apache.spark.sql.types._ 
+ import org.apache.spark.sql.Row;
+ import org.apache.spark.sql.types.{StructType,StructField,StringType}; 
+
+ val firstSchema = StructType(Array(
+    StructField("ip_address", StringType, true),
+    StructField("date", StringType, true),
+    StructField("http_get", StringType, true),
+    StructField("http_status", IntegerType, true),
+    StructField("rel_link", StringType, true)))
+    
+    
+val df =sqlContext.read.format("com.databricks.spark.csv").option("header", "true").option("delimiter", ",").schema(firstSchema).load("/user/maria_dev/project5/Webloags.csv")
+
+val secondSchema = StructType(Array(
+    StructField("ip_address", StringType, true),
+    StructField("country", StringType, true),
+    StructField("browser", StringType, true),
+    StructField("city", StringType, true)))
+    
+val df2 =sqlContext.read.format("com.databricks.spark.csv").option("header", "true").option("delimiter", ",").schema(secondSchema).load("/user/maria_dev/project5/IP_Mapping.csv")
+
+val united_df = df.join(df2, "ip_address" )
+
+united_df.where(united_df("http_status") === 200).groupBy("country").count().show()
+
+united_df.where(united_df("http_status") === 200).groupBy("city").count().show()
+
+united_df.where(united_df("http_status") === 200).groupBy("browser").count().show()
+
+val errors = united_df.filters($”https_status”!==200).count()
+val total = united_df.count()
+
+val ans = errors*1000/total
